@@ -3,7 +3,7 @@ on: [push]
 jobs:
   check-conatainer:
     runs-on: ubuntu-latest
-    container: qdm12/latexdevcontainer
+    container: qmcgaw/latexdevcontainer
     steps:
       - name: Checkout
         uses: actions/checkout@v2
