@@ -1,0 +1,8 @@
+name: docker-resume-template
+on: [push]
+jobs:
+  build-tex-files:
+    runs-on: qdm12/latexdevcontainer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
