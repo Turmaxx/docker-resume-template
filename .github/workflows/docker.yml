@@ -36,6 +36,3 @@ jobs:
 
       - name: Clean Up Docker Container
         run: docker rm test_container
-
-      - name: Docker Container Status
-        run: echo "Container Status: ${{ steps.check_status.outputs.container_status }}"
