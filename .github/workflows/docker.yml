@@ -1,11 +1,41 @@
-name: docker-resume-template
-on: [push]
+name: Docker Container Check
+on:
+  push:
+    branches:
+      - master
+
 jobs:
-  check-conatainer:
+  check_docker_container:
     runs-on: ubuntu-latest
-    container: qmcgaw/latexdevcontainer
+
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Build
-        run: docker build -t test .
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Build Docker Image
+        run: docker build -t qmcgaw/latexdevcontainer .
+        
+      - name: Run Docker Container
+        run: docker run -d --name test_container mcgaw/latexdevcontainer:latest
+
+      - name: Check Container Status
+        id: check_status
+        run: |
+          container_status=$(docker inspect -f {{.State.Status}} test_container)
+          if [[ $container_status == "running" ]]; then
+            echo "::set-output name=container_status::running"
+          else
+            echo "::set-output name=container_status::failed"
+          fi
+
+      - name: Stop Docker Container
+        run: docker stop test_container
+
+      - name: Clean Up Docker Container
+        run: docker rm test_container
+
+      - name: Docker Container Status
+        run: echo "Container Status: ${{ steps.check_status.outputs.container_status }}"
